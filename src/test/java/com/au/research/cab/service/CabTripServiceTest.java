@@ -1,7 +1,9 @@
 package com.au.research.cab.service;
 
+import com.au.research.cab.exception.ApplicationException;
 import com.au.research.cab.model.CabTripCount;
 import com.au.research.cab.repository.CabTripRepository;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,4 +109,133 @@ public class CabTripServiceTest {
         assertTrue(cabDayTripCount.getTripCount() == tripCount);
     }
 
+    /**
+     * Test getting cab trip count for a cab but null pickup date.
+     * ApplicationException is expected to be thrown.
+     */
+    @Test(expected = ApplicationException.class)
+    public void testGetCabTripCountForExistingMedallionAndNullPickupDate() {
+        try {
+            CabTripCount cabDayTripCount = cabTripService.getCabDayTripCount("ABC", null);
+            Assert.fail("Expected ApplicationException was not thrown");
+        } catch (ApplicationException ex) {
+            throw ex;
+        }
+    }
+
+    /**
+     * Test getting cab trip count for null cab but valid pickup date.
+     * ApplicationException is expected to be thrown.
+     */
+    @Test(expected = ApplicationException.class)
+    public void testGetCabTripCountForNullMedallionAndValidPickupDate() {
+        try {
+            CabTripCount cabDayTripCount = cabTripService.getCabDayTripCount(null, LocalDate.now());
+            Assert.fail("Expected ApplicationException was not thrown");
+        } catch (ApplicationException ex) {
+            throw ex;
+        }
+    }
+
+    /**
+     * Test getting latest cab trip count for a cab on a pickup date.
+     * Scenario: The cab exists with 3 cab trips for a certain pickup date.
+     */
+    @Test
+    public void testGetLatestCabTripCountForAMedallionAndPickupDate() {
+        // Prepare Test Data
+        String medallion = "D7D598CD99978BD012A87A76A7C891B7";
+        String pickupDate = "2013-12-01";
+        LocalDate localDate = LocalDate.from(formatter.parse(pickupDate));
+        LocalDateTime pickupDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
+        long tripCount = 3L;
+
+        when(cabTripRepository.countByMedallionAndPickupDateTimeGreaterThanEqualAndPickupDateTimeBefore(medallion, pickupDateTime, pickupDateTime.plusDays(1L)))
+                .thenReturn(tripCount);
+
+        CabTripCount cabDayTripCount = cabTripService.getLatestCabDayTripCount(medallion, localDate);
+        assertNotNull("Cab trip count cannot be null", cabDayTripCount);
+        assertEquals(cabDayTripCount.getMedallion(), medallion);
+        assertEquals(cabDayTripCount.getPickupDate(), pickupDate);
+        assertTrue(cabDayTripCount.getTripCount() == tripCount);
+    }
+
+    /**
+     * Test getting Latest cab trip count for a cab on a pickup date.
+     * Scenario: The cab exists with no cab trips for a certain pickup date.
+     */
+    @Test
+    public void testGetLatestCabTripCountForAMedallionAndNonExistantPickupDate() {
+        // Prepare Test Data
+        String medallion = "D7D598CD99978BD012A87A76A7C891B7";
+        String pickupDate = "1980-12-01";
+        LocalDate localDate = LocalDate.from(formatter.parse(pickupDate));
+        LocalDateTime pickupDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
+        Long tripCount = 0L;
+
+        when(cabTripRepository.countByMedallionAndPickupDateTimeGreaterThanEqualAndPickupDateTimeBefore(medallion, pickupDateTime, pickupDateTime.plusDays(1L)))
+                .thenReturn(tripCount);
+
+        CabTripCount cabDayTripCount = cabTripService.getLatestCabDayTripCount(medallion, localDate);
+        assertNotNull("Cab trip count cannot be null", cabDayTripCount);
+        assertEquals(cabDayTripCount.getMedallion(), medallion);
+        assertEquals(cabDayTripCount.getPickupDate(), pickupDate);
+        assertTrue(cabDayTripCount.getTripCount() == tripCount);
+    }
+
+    /**
+     * Test getting Latest cab trip count for a cab on a pickup date.
+     * Scenario: The cab does not exist. No trip count is expected.
+     */
+    @Test
+    public void testGetLatestCabTripCountForNonExistantMedallionAndPickupDate() {
+        // Prepare Test Data
+        String medallion = "ABC";
+        String pickupDate = "2013-12-01";
+        LocalDate localDate = LocalDate.from(formatter.parse(pickupDate));
+        LocalDateTime pickupDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
+        Long tripCount = 0L;
+
+        when(cabTripRepository.countByMedallionAndPickupDateTimeGreaterThanEqualAndPickupDateTimeBefore(medallion, pickupDateTime, pickupDateTime.plusDays(1L)))
+                .thenReturn(tripCount);
+
+        CabTripCount cabDayTripCount = cabTripService.getLatestCabDayTripCount(medallion, localDate);
+        assertNotNull("Cab trip count cannot be null", cabDayTripCount);
+        assertEquals(cabDayTripCount.getMedallion(), medallion);
+        assertEquals(cabDayTripCount.getPickupDate(), pickupDate);
+        assertTrue(cabDayTripCount.getTripCount() == tripCount);
+    }
+
+    /**
+     * Test getting Latest cab trip count for a cab but null pickup date.
+     * ApplicationException is expected to be thrown.
+     */
+    @Test(expected = ApplicationException.class)
+    public void testGetLatestCabTripCountForExistingMedallionAndNullPickupDate() {
+        try {
+            CabTripCount cabDayTripCount = cabTripService.getLatestCabDayTripCount("ABC", null);
+            Assert.fail("Expected ApplicationException was not thrown");
+        } catch (ApplicationException ex) {
+            throw ex;
+        }
+    }
+
+    /**
+     * Test getting Latest cab trip count for null cab but valid pickup date.
+     * ApplicationException is expected to be thrown.
+     */
+    @Test(expected = ApplicationException.class)
+    public void testGetLatestCabTripCountForNullMedallionAndValidPickupDate() {
+        try {
+            CabTripCount cabDayTripCount = cabTripService.getLatestCabDayTripCount(null, LocalDate.now());
+            Assert.fail("Expected ApplicationException was not thrown");
+        } catch (ApplicationException ex) {
+            throw ex;
+        }
+    }
+
+    @Test
+    public void testDeleteCacheContents() {
+        cabTripService.clearAllCacheContents();
+    }
 }

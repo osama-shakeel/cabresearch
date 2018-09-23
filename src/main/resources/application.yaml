@@ -10,3 +10,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate.dialect:  org.hibernate.dialect.H2Dialect
+  cache:
+    jcache:
+      config: classpath:cache/ehcache.xml
