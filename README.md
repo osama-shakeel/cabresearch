@@ -1,7 +1,12 @@
 # Program Design/Features
 - The application's REST API details are provided in the **swagger.yaml** file located at the root folder of the project.
+- The project is **Gradle** based **Spring Boot** project.
+- Spring modules used are mainly Spring MVC, Spring JPA and Spring Cache.
 - For both Development and Test environments, the in-memory database H2 has been used.
-- For caching, EhCache has been used, configured with a single cache for storing Cab trip counts with expiry time of 5 minutes.
+	- In Development environment, the schema and actual data are in **schema.sql** and **data.sql** respectively.
+	- In Test environment, the schema and actual data are in **schema-h2.sql** and **data-h2.sql** respectively.
+- For caching, EhCache has been used, configured with a single cache for storing Cab trip counts with expiry time of 5 minutes.  In the application, Spring Cache abstraction has been used over Ehcache.
+
 
 # Steps to build
 - Please clone and download this repository locally.
@@ -12,7 +17,7 @@
 *If in Unix/OSX:*
     `./gradlew clean build`
 
-	where The jar file is created in **build/lib** folder.
+	where the jar file is created in **build/lib** folder.
 
 
 # Steps to run program
