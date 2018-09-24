@@ -1,0 +1,170 @@
+swagger: "2.0"
+info:
+  description: "Cab Research REST API application"
+  version: "1.0.0"
+  title: "Cab Data Research"
+  termsOfService: "http://swagger.io/terms/"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8080"
+basePath: "/cabresearch/api"
+schemes:
+- "http"
+paths:
+  /cabTrips/{medallion}/count:
+    get:
+      tags:
+      - "cab trip count"
+      summary: "Get a cab's trip count on a pickup date"
+      description: "Returns a single CabTripCount for a cab on a pickup date. The result will be cached for 5 minutes for future use."
+      operationId: "getCabTripCount"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "medallion"
+        in: "path"
+        description: "ID of the Cab"
+        required: true
+        type: "string"
+      - name: "pickupDate"
+        in: "query"
+        description: "Pickup Date in format yyyyMMdd"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CabTripCount"
+        400:
+          description: "Invalid API parameters"
+          schema:
+            $ref: '#/definitions/ApiError'
+  /cabTrips/{medallion}/count/latest:
+    get:
+      tags:
+      - "cab trip count"
+      summary: "Get a cab's latest trip count on a pickup date (without using the cache)"
+      description: "Returns a single, latest CabTripCount for a cab on a pickup date. The cache will not be looked up but the API will lookup the DB for the count. The result will be cached for 5 minutes for future use."
+      operationId: "getLatestCabTripCount"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "medallion"
+        in: "path"
+        description: "ID of the Cab"
+        required: true
+        type: "string"
+      - name: "pickupDate"
+        in: "query"
+        description: "Pickup Date in format yyyyMMdd"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/CabTripCount"
+        400:
+          description: "Invalid API parameters"
+          schema:
+            $ref: '#/definitions/ApiError'
+  /cabTrips/count:
+    get:
+      tags:
+      - "cab trip count"
+      summary: "Get one or more cabs' trip count on a pickup date"
+      description: "Returns list of CabTripCounts for one ore more cabs on a pickup date. The trip counts of each cab will be cached for 5 minutes for future use."
+      operationId: "getCabTripsCounts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "medallion"
+        in: "query"
+        description: "Comma separated list Cabs' IDs"
+        required: true
+        type: "string"
+      - name: "pickupDate"
+        in: "query"
+        description: "Pickup Date in format yyyyMMdd"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CabTripCount"
+        400:
+          description: "Invalid API parameters"
+          schema:
+            $ref: '#/definitions/ApiError'
+  /cabTrips/count/latest:
+    get:
+      tags:
+      - "cab trip count"
+      summary: "Get one or more cabs' latest trip count on a pickup date"
+      description: "Returns list of latest CabTripCounts for one ore more cabs on a pickup date. The cache will not be looked up but the API will lookup the DB for the count. The trip counts of each cab will be cached for 5 minutes for future use."
+      operationId: "getLatestCabTripsCounts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "medallion"
+        in: "query"
+        description: "Comma separated list of Cabs' IDs"
+        required: true
+        type: "string"
+      - name: "pickupDate"
+        in: "query"
+        description: "Pickup Date in format yyyyMMdd"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CabTripCount"
+        400:
+          description: "Invalid API parameters"
+          schema:
+            $ref: '#/definitions/ApiError'
+  /cabTrips/cache/contents:
+    delete:
+      tags:
+      - "cab trip count"
+      summary: "Clears the cab trip counts cache"
+      description: "Clears the Cab trip counts cache upon user request"
+      operationId: "deleteCabTripCountCacheContents"
+      responses:
+        204:
+          description: "successful operation with no content"
+definitions:
+  CabTripCount:
+    type: "object"
+    properties:
+      medallion:
+        type: "string"
+      pickupDate:
+        type: "string"
+        format: "yyyyMMdd"
+      tripCount:
+        type: "integer"
+        format: "int64"
+  ApiError:
+    type: "object"
+    properties:
+      status:
+        type: "integer"
+        format: "int32"
+        description: "Http error status"
+      error:
+        type: "string"
+        description: "API error code"
+      message:
+        type: "string"
+        description: "Detailed error description"
+  

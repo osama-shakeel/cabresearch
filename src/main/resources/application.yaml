@@ -1,4 +1,9 @@
+server:
+  servlet:
+    context-path: /cabresearch
+  port: 8080
 spring:
+
   datasource:
     url: jdbc:h2:mem:db
     username: sa

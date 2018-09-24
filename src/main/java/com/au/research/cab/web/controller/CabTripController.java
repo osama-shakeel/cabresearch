@@ -30,7 +30,6 @@ public class CabTripController {
      * @param pickupDate
      * @return CabTripCount instance.
      */
-    // /api/cabTrips/ASHJH65675/count?pickupDate=20180113
     @GetMapping(value = "/{medallion}/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody CabTripCount getCabTripCount(
@@ -53,7 +52,6 @@ public class CabTripController {
      * @param pickupDate
      * @return CabTripCount instance.
      */
-    // /api/cabTrips/ASHJH65675/count?pickupDate=20180113
     @GetMapping(value = "/{medallion}/count/latest", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody CabTripCount getLatestCabTripCount(
@@ -76,7 +74,6 @@ public class CabTripController {
      * @param pickupDate
      * @return List of CabTripCounts
      */
-    // /api/cabTrips/count?medallion=ASHJH65675,BSXH6577&pickupDate=20130113
     @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CabTripCount> getCabTripsCounts(
@@ -104,7 +101,6 @@ public class CabTripController {
      * @param pickupDate
      * @return List of CabTripCounts
      */
-    // /api/cabTrips/count?medallion=ASHJH65675,BSXH6577&pickupDate=20130113
     @GetMapping(value = "/count/latest", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CabTripCount> getLatestCabTripsCounts(

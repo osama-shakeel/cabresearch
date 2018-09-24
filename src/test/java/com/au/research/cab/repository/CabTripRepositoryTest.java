@@ -10,11 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -67,29 +65,6 @@ public class CabTripRepositoryTest {
                         medallion, fromDateTime, toDateTime);
         assertTrue(tripCount == 3L);
     }
-
-    /**
-     * Tests finding Cab's trips for a given date range.
-     * Scenario: For an existing Cab trip the count is expected to be returned.
-     */
-//    @Test
-//    public void testFindCabTripsByMediallionAndDate_AndReturnTrips() {
-//        // Prepare Test Data
-//        String medallion = "D7D598CD99978BD012A87A76A7C891B7";
-//
-//        // 01-12-2013 00:00:00
-//        LocalDateTime fromDateTime = LocalDateTime.of(2013, 12, 1, 0, 0, 0);
-//
-//        // 02-12-2013 00:00:00
-//        LocalDateTime toDateTime = fromDateTime.plusDays(1);
-//
-//        // Call test method
-//        List<CabTrip> list =
-//                cabTripRepository.findCabTripsByMediallionAndPickupDateRange(
-//                        medallion, fromDateTime, toDateTime);
-//        assertNotNull(list);
-//        assertEquals(list.size(), 3);
-//    }
 
     /**
      * Tests finding Cab's trips for a given date range.
